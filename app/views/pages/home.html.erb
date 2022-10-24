@@ -1,2 +1,49 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<h1 class="text-center mt-5">Le Wagon Lisbon</h1>
+<h4 class="text-center">Teachers Roaster</h4>
+
+<% if user_signed_in? %>
+  <div class="text-center mt-5">
+    <%#= button_to "Export Current Roaster", export_roaster_path, data: { turbo_method: :post, disable_with: "<i class='fa fa-spinner fa-spin'></i> Updating" }, class: "btn btn-dark" %>
+    <%= button_to "Update Roaster", update_roaster_path, data: { turbo_method: :post, disable_with: "<i class='fa fa-spinner fa-spin'></i> Updating" }, class: "btn btn-dark" %>
+  </div>
+
+  <div class="my-5">
+    <table>
+      <tr>
+        <th class="first-table-th">Name</th>
+        <th>Github Nickname</th>
+        <th>Location</th>
+        <th class="last-table-th">Kitt Profile</th>
+      </tr>
+      <% @teachers.each do |teacher| %>
+        <tr class="position-relative">
+          <td><%= teacher.first_name %> <%= teacher.last_name %></td>
+          <td><%= teacher.github_nickname %></td>
+          <td><%= teacher.country_of_residence %> - <%= teacher.city_of_residence %></td>
+          <td><%= link_to teacher.teacher_profile_url, teacher.teacher_profile_url, style: "color: black", target: "a_blank" %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
+<% else %>
+  <div class="sign-up-container mt-5">
+    <h2 class="text-center">Log in</h2>
+
+    <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: :false }) do |f| %>
+      <div class="form-inputs">
+        <%= f.input :email,
+                    required: false,
+                    autofocus: true,
+                    input_html: { autocomplete: "email" } %>
+        <%= f.input :password,
+                    required: false,
+                    input_html: { autocomplete: "current-password" } %>
+        <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+      </div>
+
+      <div class="form-actions text-center">
+        <%= f.button :submit, "Log in", class: "btn btn-dark" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

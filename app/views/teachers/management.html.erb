@@ -1,0 +1,34 @@
+<h1 class="mt-5 text-center">Le Wagon Lisbon Teachers</h1>
+
+<div class="mt-5 text-center">
+  <%= link_to "+Add Teacher", new_teacher_path, class: "btn btn-dark" %>
+</div>
+
+<div class="mt-5">
+  <div class="alert-teachers">
+    <i class="fa-solid fa-bell position-absolute" style="color: rgb(230,14,5)"></i>
+    <p class="m-0">Teacher not present in the API (no classes given ever).</p>
+  </div>
+
+  <table class="teachers-mgmt-table">
+    <tr>
+      <th class="first-table-th">Name</th>
+      <th class="last-table-th">Github Nickname</th>
+    </tr>
+    <% @teachers.each do |teacher| %>
+      <tr class="position-relative">
+        <td style=<%= TeachersRoaster.find_by(github_nickname: teacher.github_nickname) ? "" : "background:" + "rgba(230,14,5,0.1);" %>><%= teacher.first_name %> <%= teacher.last_name %></td>
+        <td style=<%= TeachersRoaster.find_by(github_nickname: teacher.github_nickname) ? "" : "background:" + "rgba(230,14,5,0.1);" %>>
+          <%= teacher.github_nickname %>
+          <%= link_to edit_teacher_path(teacher), class: "position-absolute edit-btn" do %>
+            <i class="fa-solid fa-pen-to-square"></i>
+          <% end %>
+
+          <%= link_to teacher_path(teacher), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "position-absolute delete-btn" do %>
+            <i class="fa-solid fa-trash"></i>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>

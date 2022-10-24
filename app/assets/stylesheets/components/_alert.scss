@@ -4,3 +4,24 @@
   right: 16px;
   z-index: 1000;
 }
+
+.alert-teachers {
+  background: rgba(230, 14, 5, 0.1);
+  text-align: center;
+  margin: 25px auto;
+  width: 460px;
+  padding: 12px;
+  border: 2px solid rgba(230, 14, 5, 0.8);
+  border-radius: 8px;
+  position: relative;
+
+  i {
+    color: rgb(230,14,5);
+    left: -18px;
+    top: -18px;
+    background: white;
+    border: 2px solid rgb(230,14,5);
+    border-radius: 50%;
+    padding: 8px 9px;
+  };
+}

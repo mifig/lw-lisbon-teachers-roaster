@@ -1,0 +1,22 @@
+<div class="sign-up-container mt-5">
+  <%= simple_form_for @teacher, data: { turbo: :false } do |f| %>
+    <h2 class="text-center">Edit Teacher</h2>
+
+    <div class="form-inputs">
+      <%= f.input :first_name,
+                  required: true,
+                  autofocus: true,
+                  input_html: { autocomplete: "first-name" } %>
+      <%= f.input :last_name,
+                  required: true,
+                  input_html: { autocomplete: "last-name" } %>
+      <%= f.input :github_nickname,
+                  required: true,
+                  input_html: { autocomplete: "github-nickname" } %>
+    </div>
+
+    <div class="form-actions text-center">
+      <%= f.button :submit, "Save", class: "btn btn-dark" %>
+    </div>
+  <% end %>
+</div>
