@@ -29,3 +29,31 @@
     border: 2px solid rgba(0,0,0,0.4);
   }
 }
+
+.btn-export {
+  background-color: #EEE7F9;
+  color: rgb(103,11,255);
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 12px 18px;
+  
+  &:hover {
+    background: rgb(103,11,255);
+    color: white;
+  }
+}
+
+.btn-update {
+  background-color: #FCF9FA;
+  color: #E60E05;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 12px 18px;
+  
+  &:hover {
+    background-color: #E60E05;
+    color: white;
+  }
+}

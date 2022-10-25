@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   resources :teachers, except: [:index, :show]
   get "/teachers", to: "teachers#management", as: :teachers_mgmt
   post "/teachers/update_roaster", to: "teachers#update_roaster", as: :update_roaster
+  get "/teachers/export_roaster", to: "teachers#export_roaster", as: :export_roaster, defaults: { format: :csv }
 end
