@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
   root to: "pages#home"
+  get "/dashboard",to: "pages#dashboard"
 
   resources :teachers, except: [:index, :show]
   get "/teachers", to: "teachers#management", as: :teachers_mgmt

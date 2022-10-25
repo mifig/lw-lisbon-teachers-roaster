@@ -1,22 +1,33 @@
 <div class="sign-up-container mt-5">
-  <h2 class="text-center">Teacher Form</h2>
+  <h2 class="text-center mb-3">Teacher Form</h2>
 
   <%= simple_form_for @teacher, data: { turbo: :false } do |f| %>
     <div class="form-inputs">
-      <%= f.input :first_name,
-                  required: true,
-                  autofocus: true,
-                  input_html: { autocomplete: "first-name" } %>
-      <%= f.input :last_name,
-                  required: true,
-                  input_html: { autocomplete: "last-name" } %>
       <%= f.input :github_nickname,
                   required: true,
                   input_html: { autocomplete: "github-nickname" } %>
     </div>
 
     <div class="form-actions text-center">
-      <%= f.button :submit, "+ Add teacher", class: "btn btn-dark" %>
+      <%= f.button :submit, "+ Add teacher", class: "btn btn-update" %>
+    </div>
+
+  <% end %>
+</div>
+
+<h3 class="text-center my-4" style="color: rgb(103,11,255);"><strong>OR</strong></h3>
+
+<div class="sign-up-container mt-4">
+  <h2 class="text-center mb-3">Teachers csv</h2>
+  <p><i>*This action will replace previous uploaded teachers.</i></p>
+
+  <%= simple_form_for @teacher, data: { turbo: :false } do |f| %>
+    <div class="form-actions mt-3 text-center">
+      <%= f.input :file, as: :file, required: true, label: false %>
+    </div>
+
+    <div class="form-actions text-center">
+      <%= f.button :submit, "Upload", class: "btn btn-export" %>
     </div>
   <% end %>
 </div>

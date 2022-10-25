@@ -2,6 +2,9 @@ class PagesController < ApplicationController
   skip_before_action :authenticate_user!, only: [ :home ]
 
   def home
+  end
+
+  def dashboard
     set_teachers_availabilities
     @last_update = TeachersAvailability.maximum(:updated_at)
   end
@@ -37,6 +40,7 @@ class PagesController < ApplicationController
                                                 A.lead_ta_work_day_count,
                                                 A.ta_work_day_count
                                                 ")
+                                              .where({github_nickname: Teacher.to_a})
                                               .joins("INNER JOIN (" + join_table_sql + ") A ON A.teacher_id = teachers_roasters.teacher_id")
                                               .order("A.id ASC")
   end

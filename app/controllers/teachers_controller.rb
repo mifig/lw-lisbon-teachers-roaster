@@ -3,12 +3,12 @@ class TeachersController < ApplicationController
   require "json"
   require 'csv'
   
-  before_action :set_teacher, only: [:create, :edit, :update, :destroy]
+  before_action :set_teacher, only: [:edit, :update, :destroy]
   
   COURSE_SLUGS = ["web"]
 
   def management
-    @teachers = Teacher.all.order(:first_name)
+    @teachers = Teacher.all.order(:github_nickname)
   end
 
   def new
@@ -27,12 +27,22 @@ class TeachersController < ApplicationController
   end
 
   def create
-    @teacher = Teacher.new(teacher_params)
+    @teacher = Teacher.find_by(teacher_params)
     
-    if @teacher.save
-      redirect_to root_path
+    if @teacher
+      flash[:notice] = "Teacher already in database"
+      redirect_to new_teacher_path
+    elsif params[:teacher][:file].nil?
+      @teacher = Teacher.new(teacher_params) 
+      
+      if !@teacher.save
+        render :new, status: :unprocessable_entity
+      end
+
+      update_roaster
     else
-      render :new, status: :unprocessable_entity
+      Teacher.import(params[:teacher][:file])
+      update_roaster
     end
   end
 
@@ -61,7 +71,7 @@ class TeachersController < ApplicationController
       end
     end
 
-    redirect_to teachers_mgmt_path
+    redirect_to dashboard_path
   end
 
   def export_roaster
@@ -79,7 +89,7 @@ class TeachersController < ApplicationController
   private 
 
   def teacher_params
-    params.require(:teacher).permit(:first_name, :last_name, :github_nickname)
+    params.require(:teacher).permit(:github_nickname)
   end
 
   def set_teacher
@@ -115,6 +125,7 @@ class TeachersController < ApplicationController
                                                 A.lead_ta_work_day_count,
                                                 A.ta_work_day_count
                                                 ")
+                                              .where({github_nickname: Teacher.to_a})
                                               .joins("INNER JOIN (" + join_table_sql + ") A ON A.teacher_id = teachers_roasters.teacher_id")
                                               .order("A.id ASC")
   end
