@@ -1,33 +1,47 @@
-<div class="sign-up-container mt-5">
-  <h2 class="text-center mb-3">Teacher Form</h2>
+<div class="d-flex justify-content-between align-items-center mt-5">
+  <div class="sign-up-container mt-5">
+    <h2 class="text-center mb-3">Teacher Form</h2>
 
-  <%= simple_form_for @teacher, data: { turbo: :false } do |f| %>
-    <div class="form-inputs">
-      <%= f.input :github_nickname,
-                  required: true,
-                  input_html: { autocomplete: "github-nickname" } %>
+    <%= form_with url: teachers_path, model: @teacher, method: :post do |f| %>
+      <div class="form-inputs">
+        <%= f.label "Github Nickname", class: "form-label email optional" %>
+        <%= f.text_field :github_nickname,
+                    required: true,
+                    input_html: { autocomplete: "github-nickname" },
+                    class: "form-control string email optional" %>
+      </div>
+
+      <div class="form-actions text-center mt-3">
+        <%= button_tag class: "btn btn-update" do %>
+          <span class="show-when-enabled">+ Add Teacher</span>
+          <span class="show-when-disabled"><i class='fa fa-spinner fa-spin'></i> Adding Teacher & Updating Roaster</span>
+        <% end %>
+      </div>
+
+    <% end %>
+  </div>
+
+  <h3 class="text-center my-4" style="color: rgb(103,11,255);"><strong>OR</strong></h3>
+
+  <div class="sign-up-container mt-4 mb-4">
+    <h2 class="text-center mb-3">Teachers csv</h2>
+    <div class="text-center">
+      <p style="font-size: 14px">csv example:</p>
+      <%= image_tag "csv_upload_example.png", height: "150px" %>
     </div>
 
-    <div class="form-actions text-center">
-      <%= f.button :submit, "+ Add teacher", class: "btn btn-update" %>
-    </div>
+    <%= form_with url: teachers_path, model: @teacher, method: :post do |f| %>
+      <div class="form-actions mt-3 text-center">
+        <%= f.file_field :file, required: true, class: "form-control file required" %>
+      </div>
 
-  <% end %>
-</div>
-
-<h3 class="text-center my-4" style="color: rgb(103,11,255);"><strong>OR</strong></h3>
-
-<div class="sign-up-container mt-4">
-  <h2 class="text-center mb-3">Teachers csv</h2>
-  <p><i>*This action will replace previous uploaded teachers.</i></p>
-
-  <%= simple_form_for @teacher, data: { turbo: :false } do |f| %>
-    <div class="form-actions mt-3 text-center">
-      <%= f.input :file, as: :file, required: true, label: false %>
-    </div>
-
-    <div class="form-actions text-center">
-      <%= f.button :submit, "Upload", class: "btn btn-export" %>
-    </div>
-  <% end %>
+      <div class="form-actions text-center mt-3">
+        <%= button_tag class: "btn btn-export" do %>
+          <span class="show-when-enabled">Upload</span>
+          <span class="show-when-disabled"><i class='fa fa-spinner fa-spin'></i> Uploading & Updating Roaster</span>
+        <% end %>
+      </div>
+    <% end %>
+    <p class="mt-2 mb-0" style="font-size: 12px"><i>*This action will replace previous uploaded teachers.</i></p>
+  </div>
 </div>

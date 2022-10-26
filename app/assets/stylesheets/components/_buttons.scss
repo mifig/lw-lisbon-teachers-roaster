@@ -56,4 +56,15 @@
     background-color: #E60E05;
     color: white;
   }
+
+}
+
+button {
+  .show-when-enabled { display: initial; }
+  .show-when-disabled { display: none; }
+
+  &[disabled] {
+    .show-when-enabled { display: none; }
+    .show-when-disabled { display: initial; }
+  }
 }

@@ -1,6 +1,8 @@
 class Teacher < ApplicationRecord
   require "csv"
 
+  validates :github_nickname, presence: true 
+
   def self.import(file)
     Teacher.destroy_all
     

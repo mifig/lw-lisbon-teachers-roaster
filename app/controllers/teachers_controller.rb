@@ -27,22 +27,30 @@ class TeachersController < ApplicationController
   end
 
   def create
-    @teacher = Teacher.find_by(teacher_params)
-    
-    if @teacher
-      flash[:notice] = "Teacher already in database"
-      redirect_to new_teacher_path
-    elsif params[:teacher][:file].nil?
-      @teacher = Teacher.new(teacher_params) 
+    if params[:teacher].present? 
+      if params[:teacher][:file].present?
+        Teacher.import(params[:teacher][:file])
+        update_roaster
+      elsif params[:teacher][:github_nickname].present?
+        if Teacher.find_by(teacher_params)
+          flash[:notice] = "Teacher already in database"
+          redirect_to new_teacher_path
+        else
+          @teacher = Teacher.new(teacher_params) 
+          
+          if !@teacher.save
+            render :new, status: :unprocessable_entity
+          end
       
-      if !@teacher.save
-        render :new, status: :unprocessable_entity
+          update_roaster
+        end
+      else
+        flash[:notice] = "Please insert a github nickname"
+        redirect_to new_teacher_path
       end
-
-      update_roaster
     else
-      Teacher.import(params[:teacher][:file])
-      update_roaster
+      flash[:notice] = "Please upload a csv file"
+      redirect_to new_teacher_path
     end
   end
 
