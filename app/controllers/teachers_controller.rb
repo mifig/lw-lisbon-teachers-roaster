@@ -5,7 +5,7 @@ class TeachersController < ApplicationController
   
   before_action :set_teacher, only: [:edit, :update, :destroy]
   
-  COURSE_SLUGS = ["web"]
+  COURSE_SLUGS = ["web", "data"]
 
   def management
     @teachers = Teacher.all.order(:github_nickname)
