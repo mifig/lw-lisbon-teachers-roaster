@@ -1,0 +1,33 @@
+.schools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-column-gap: 12px;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+.school-card {
+  background-image: url("https://www-img.lewagon.com/70jORFEZ3lNKGyUfwODxgWIHYzROSrmRP4wSk6lugTE/rs:fill:830:704/plain/s3://wagon-www/zinjaocfymfnza5eefwrv8c664pl");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 12px;
+  width: 100%;
+
+  a {
+    color: #670bff;
+    font-weight: bold;
+    width: 100%;
+    padding: 50px 0px;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.9);
+    font-size: 22px;
+    border-radius: 12px;
+
+    &:hover {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border-radius: 12px;
+      text-shadow: none;
+    }
+  }
+}

@@ -8,6 +8,7 @@ class TeachersController < ApplicationController
   COURSE_SLUGS = ["web", "data"]
 
   def management
+    @schools = current_user.schools
     @teachers = Teacher.all.order(:github_nickname)
   end
 
@@ -60,7 +61,8 @@ class TeachersController < ApplicationController
   end
 
   def update_roaster
-    teachers = Teacher.all
+    school = School.find(params[:school_id])
+    teachers = Teacher.where(school: school)
 
     COURSE_SLUGS.each do |course_slug|
       course_days = BootcampsWeek.where(course_slug: course_slug)
@@ -72,8 +74,8 @@ class TeachersController < ApplicationController
           
           teacher_new_info = day_info.find { |teacher_info| teacher_info["github_nickname"] == teacher.github_nickname }
           if teacher_new_info
-            update_teacher_roaster(teacher, teacher_new_info)
-            update_teacher_availability(teacher_new_info, day)
+            update_teacher_roaster(teacher, teacher_new_info, school)
+            update_teacher_availability(teacher_new_info, day, school)
           end
         end
       end
@@ -83,6 +85,8 @@ class TeachersController < ApplicationController
   end
 
   def export_roaster
+    @school = School.find(params[:school_id])
+
     set_teachers_availabilities
 
     respond_to do |format|
@@ -111,7 +115,7 @@ class TeachersController < ApplicationController
                                      bootcamps_weeks.course_slug, 
                                      bootcamps_weeks.week, 
                                      bootcamps_weeks.lecture_day_slug,
-                                     teachers_availabilities.teacher_id,
+                                     teachers_availabilities.teachers_roasters_id,
                                      teachers_availabilities.lecturer_work_day_count,
                                      teachers_availabilities.lead_ta_work_day_count,
                                      teachers_availabilities.ta_work_day_count")
@@ -122,7 +126,8 @@ class TeachersController < ApplicationController
                                                 A.course_slug, 
                                                 A.week, 
                                                 A.lecture_day_slug,
-                                                A.teacher_id,
+                                                A.teachers_roasters_id,
+                                                teachers_roasters.teacher_id,
                                                 teachers_roasters.first_name,
                                                 teachers_roasters.last_name,
                                                 teachers_roasters.github_nickname,
@@ -133,7 +138,7 @@ class TeachersController < ApplicationController
                                                 A.lead_ta_work_day_count,
                                                 A.ta_work_day_count
                                                 ")
-                                              .where({github_nickname: Teacher.to_a})
+                                              .where(github_nickname: Teacher.to_a, school: @school)
                                               .joins("INNER JOIN (" + join_table_sql + ") A ON A.teacher_id = teachers_roasters.teacher_id")
                                               .order("A.id ASC")
   end
@@ -145,12 +150,12 @@ class TeachersController < ApplicationController
     parsed_response["teachers"]
   end
 
-  def get_teacher_roaster(teacher)
-    TeachersRoaster.find_by(github_nickname: teacher.github_nickname)
+  def get_teacher_roaster(teacher, school)
+    TeachersRoaster.find_by(github_nickname: teacher.github_nickname, school: school)
   end
 
-  def update_teacher_roaster(teacher, teacher_new_info)
-    if get_teacher_roaster(teacher).nil?
+  def update_teacher_roaster(teacher, teacher_new_info, school)
+    if get_teacher_roaster(teacher, school).nil?
       TeachersRoaster.create(
         teacher_id: teacher_new_info["id"],
         first_name: teacher_new_info["first_name"],
@@ -158,14 +163,15 @@ class TeachersController < ApplicationController
         github_nickname: teacher_new_info["github_nickname"],
         city_of_residence: teacher_new_info["city_of_residence"],
         country_of_residence: teacher_new_info["country_of_residence"],
-        teacher_profile_url: teacher_new_info["teacher_profile_url"]
+        teacher_profile_url: teacher_new_info["teacher_profile_url"],
+        school_id: school.id
       )
     end
   end
 
-  def update_teacher_availability(teacher_new_info, day)
-    if TeachersAvailability.find_by(bootcamps_week_id: day.id, teacher_id: teacher_new_info["id"])
-      TeachersAvailability.find_by(bootcamps_week_id: day.id, teacher_id: teacher_new_info["id"]).update(
+  def update_teacher_availability(teacher_new_info, day, school)
+    if TeachersAvailability.find_by(bootcamps_week_id: day.id, teachers_roasters_id: TeachersRoaster.find_by(teacher_id: teacher_new_info["id"]).id)
+      TeachersAvailability.find_by(bootcamps_week_id: day.id, teachers_roasters_id: TeachersRoaster.find_by(teacher_id: teacher_new_info["id"]).id).update(
         lecturer_work_day_count: teacher_new_info["lecturer_work_day_count"],
         lead_ta_work_day_count: teacher_new_info["lead_ta_work_day_count"],
         ta_work_day_count: teacher_new_info["ta_work_day_count"]
@@ -175,7 +181,7 @@ class TeachersController < ApplicationController
         lecturer_work_day_count: teacher_new_info["lecturer_work_day_count"],
         lead_ta_work_day_count: teacher_new_info["lead_ta_work_day_count"],
         ta_work_day_count: teacher_new_info["ta_work_day_count"],
-        teacher_id: teacher_new_info["id"],
+        teachers_roasters_id: TeachersRoaster.find_by(teacher_id: teacher_new_info["id"]).id,
         bootcamps_week_id: day.id
       )
     end

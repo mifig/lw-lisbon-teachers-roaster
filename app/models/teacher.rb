@@ -1,6 +1,8 @@
 class Teacher < ApplicationRecord
   require "csv"
 
+  belongs_to :school
+
   validates :github_nickname, presence: true 
 
   def self.import(file)

@@ -1,5 +1,6 @@
 class TeachersRoaster < ApplicationRecord
-  has_many :teachers_availabilities, foreign_key: 'teacher_id', primary_key: 'teacher_id', dependent: :destroy
+  has_many :teachers_availabilities, dependent: :destroy
+  belongs_to :school
 
   def to_a
     attributes.map do |k,v|

@@ -45,7 +45,7 @@
             <td><%= availability.course_slug %></td>
             <td><%= availability.week %></td>
             <td><%= availability.lecture_day_slug %></td>
-            <td><%= availability.teacher_id %></td>
+            <td><%= availability.teachers_roaster.teacher_id %></td>
             <td><%= availability.first_name %> <%= availability.last_name %></td>
             <td><%= availability.github_nickname %></td>
             <td style="<%= "color: rgba(0,0,0,0.1)" if availability.lecturer_work_day_count == 0 %>"><%= availability.lecturer_work_day_count %></td>
