@@ -4,4 +4,8 @@ class PagesController < ApplicationController
   def home
     @schools = current_user.schools
   end
+
+  def management
+    @schools = current_user.schools
+  end
 end

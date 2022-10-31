@@ -6,6 +6,11 @@ class SchoolsController < ApplicationController
     @last_update = TeachersAvailability.maximum(:updated_at)
   end
 
+  def management
+    @school = School.find(params[:school_id])
+    @teachers = Teacher.where(school: @school).order(:github_nickname)
+  end
+
   private
 
   def set_teachers_availabilities

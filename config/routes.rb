@@ -1,14 +1,19 @@
 Rails.application.routes.draw do
   devise_for :users
-  root to: "pages#home"
-  get ":school_id/dashboard",to: "schools#dashboard", as: :dashboard
-
-  get "/management", to: "teachers#management", as: :teachers_mgmt
-  post ":school_id/teachers/update_roaster", to: "teachers#update_roaster", as: :update_roaster
-  get ":school_id/teachers/export_roaster", to: "teachers#export_roaster", as: :export_roaster, defaults: { format: :csv }
   
+  root to: "pages#home"
+
+  get "/dashboard/:school_id",to: "schools#dashboard", as: :dashboard
+  
+  get "/management", to: "pages#management", as: :teachers_mgmt
+  get "/management/:school_id", to: "schools#management", as: :school_mgmt
+
+  post "/teachers/:school_id/update_roaster", to: "teachers#update_roaster", as: :update_roaster
+  get "/teachers/:school_id/export_roaster", to: "teachers#export_roaster", as: :export_roaster, defaults: { format: :csv }
   
   resources :schools, only: [:show]
 
-  resources :teachers, only: [:new, :create, :edit, :update]
+  get "/teachers/:school_id/new", to: "teachers#new", as: :new_teacher
+
+  resources :teachers, only: [:create, :edit, :update]
 end

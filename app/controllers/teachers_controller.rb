@@ -7,13 +7,9 @@ class TeachersController < ApplicationController
   
   COURSE_SLUGS = ["web", "data"]
 
-  def management
-    @schools = current_user.schools
-    @teachers = Teacher.all.order(:github_nickname)
-  end
-
   def new
     @teacher = Teacher.new
+    @school = School.find(params[:school_id])
   end
 
   def edit
@@ -28,9 +24,10 @@ class TeachersController < ApplicationController
   end
 
   def create
+    @school = params[:school_id]
     if params[:teacher].present? 
       if params[:teacher][:file].present?
-        Teacher.import(params[:teacher][:file])
+        Teacher.import(params[:teacher][:file], @school.id)
         update_roaster
       elsif params[:teacher][:github_nickname].present?
         if Teacher.find_by(teacher_params)
@@ -101,7 +98,7 @@ class TeachersController < ApplicationController
   private 
 
   def teacher_params
-    params.require(:teacher).permit(:github_nickname)
+    params.require(:teacher).permit(:github_nickname, :school_id)
   end
 
   def set_teacher

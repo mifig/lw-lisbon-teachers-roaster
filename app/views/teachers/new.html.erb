@@ -5,6 +5,7 @@
     <%= form_with url: teachers_path, model: @teacher, method: :post do |f| %>
       <div class="form-inputs">
         <%= f.label "Github Nickname", class: "form-label email optional" %>
+        <%= f.hidden_field :school_id, value: @school.id %>
         <%= f.text_field :github_nickname,
                     required: true,
                     input_html: { autocomplete: "github-nickname" },

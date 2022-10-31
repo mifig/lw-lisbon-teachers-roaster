@@ -1,14 +1,10 @@
 <h1 class="mt-5 text-center"><strong>Le Wagon</strong></h1>
 <h2 class="text-center">My Teachers</h2>
 
-<div class="mt-5 text-center">
-  <%= link_to "Upload Teachers", new_teacher_path, class: "btn btn-update" %>
-</div>
-
 <div class="schools-grid mt-4">
   <% @schools.each do |school| %>
     <div class="school-card text-center">
-      <%= link_to school.city, dashboard_path(school), class: "btn" %>
+      <%= link_to school.city, school_mgmt_path(school), class: "btn" %>
     </div>
   <% end %>
 </div>
