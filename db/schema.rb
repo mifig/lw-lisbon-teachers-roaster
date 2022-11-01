@@ -45,9 +45,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_31_132639) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "bootcamps_week_id", null: false
-    t.bigint "teachers_roasters_id", null: false
+    t.bigint "teachers_roaster_id", null: false
     t.index ["bootcamps_week_id"], name: "index_teachers_availabilities_on_bootcamps_week_id"
-    t.index ["teachers_roasters_id"], name: "index_teachers_availabilities_on_teachers_roasters_id"
+    t.index ["teachers_roaster_id"], name: "index_teachers_availabilities_on_teachers_roaster_id"
   end
 
   create_table "teachers_roasters", force: :cascade do |t|
@@ -87,7 +87,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_31_132639) do
 
   add_foreign_key "teachers", "schools"
   add_foreign_key "teachers_availabilities", "bootcamps_weeks"
-  add_foreign_key "teachers_availabilities", "teachers_roasters", column: "teachers_roasters_id"
+  add_foreign_key "teachers_availabilities", "teachers_roasters"
   add_foreign_key "teachers_roasters", "schools"
   add_foreign_key "user_schools", "schools"
   add_foreign_key "user_schools", "users"

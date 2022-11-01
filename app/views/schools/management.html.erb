@@ -1,5 +1,7 @@
-<h1 class="mt-5 text-center"><strong>Le Wagon</strong></h1>
-<h2 class="text-center"><%= @school.city %> Teachers</h2>
+<div class="banner py-5">
+  <h1 class="text-center"><strong>Le Wagon</strong></h1>
+  <h4 class="text-center"><span style="color: #E60E05; font-weight: bold;"><%= @school.city %></span> Campus</h4>
+</div>
 
 <div class="mt-5 text-center">
   <%= link_to "Upload Teachers", new_teacher_path, class: "btn btn-update" %>

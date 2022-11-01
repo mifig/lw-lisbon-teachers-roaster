@@ -20,7 +20,7 @@ class SchoolsController < ApplicationController
                                      bootcamps_weeks.course_slug, 
                                      bootcamps_weeks.week, 
                                      bootcamps_weeks.lecture_day_slug,
-                                     teachers_availabilities.teachers_roasters_id,
+                                     teachers_availabilities.teachers_roaster_id,
                                      teachers_availabilities.lecturer_work_day_count,
                                      teachers_availabilities.lead_ta_work_day_count,
                                      teachers_availabilities.ta_work_day_count")
@@ -31,7 +31,7 @@ class SchoolsController < ApplicationController
                                                 A.course_slug, 
                                                 A.week, 
                                                 A.lecture_day_slug,
-                                                A.teachers_roasters_id,
+                                                A.teachers_roaster_id,
                                                 teachers_roasters.teacher_id,
                                                 teachers_roasters.first_name,
                                                 teachers_roasters.last_name,
@@ -41,10 +41,9 @@ class SchoolsController < ApplicationController
                                                 teachers_roasters.teacher_profile_url,
                                                 A.lecturer_work_day_count,
                                                 A.lead_ta_work_day_count,
-                                                A.ta_work_day_count
-                                                ")
-                                              .where(github_nickname: Teacher.to_a, school_id: @school.id)
-                                              .joins("INNER JOIN (" + join_table_sql + ") A ON A.teachers_roasters_id = teachers_roasters.id")
+                                                A.ta_work_day_count")
+                                              .where(github_nickname: Teacher.to_a, school: @school)
+                                              .joins("INNER JOIN (" + join_table_sql + ") A ON A.teachers_roaster_id = teachers_roasters.id")
                                               .order("A.id ASC")
   end
 end

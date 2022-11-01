@@ -24,7 +24,7 @@ class TeachersController < ApplicationController
   end
 
   def create
-    @school = params[:school_id]
+    @school = School.find(params.dig(:teacher, :school_id))
     if params[:teacher].present? 
       if params[:teacher][:file].present?
         Teacher.import(params[:teacher][:file], @school.id)
@@ -32,7 +32,7 @@ class TeachersController < ApplicationController
       elsif params[:teacher][:github_nickname].present?
         if Teacher.find_by(teacher_params)
           flash[:notice] = "Teacher already in database"
-          redirect_to new_teacher_path
+          redirect_to new_teacher_path(@school)
         else
           @teacher = Teacher.new(teacher_params) 
           
@@ -44,23 +44,23 @@ class TeachersController < ApplicationController
         end
       else
         flash[:notice] = "Please insert a github nickname"
-        redirect_to new_teacher_path
+        redirect_to new_teacher_path(@school)
       end
     else
       flash[:notice] = "Please upload a csv file"
-      redirect_to new_teacher_path
+      redirect_to new_teacher_path(@school)
     end
   end
 
   def destroy
     @teacher.destroy
-    redirect_to teachers_mgmt_path, status: :see_other
+    redirect_to school_mgmt_path(@teacher.school), status: :see_other
   end
 
   def update_roaster
-    school = School.find(params[:school_id])
+    school = params[:school_id] ? School.find(params[:school_id]) : School.find(params.dig(:teacher, :school_id))
     teachers = Teacher.where(school: school)
-
+    
     COURSE_SLUGS.each do |course_slug|
       course_days = BootcampsWeek.where(course_slug: course_slug)
       
@@ -78,7 +78,7 @@ class TeachersController < ApplicationController
       end
     end
 
-    redirect_to dashboard_path
+    redirect_to dashboard_path(school)
   end
 
   def export_roaster
@@ -89,7 +89,7 @@ class TeachersController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
-        headers['Content-Disposition'] = "attachment; filename=\"teachers_roaster_#{Date.today}.csv\""
+        headers['Content-Disposition'] = "attachment; filename=\"teachers_roaster_#{@school.city}_#{Date.today}.csv\""
         headers['Content-Type'] ||= 'text/csv'
       end
     end
@@ -112,7 +112,7 @@ class TeachersController < ApplicationController
                                      bootcamps_weeks.course_slug, 
                                      bootcamps_weeks.week, 
                                      bootcamps_weeks.lecture_day_slug,
-                                     teachers_availabilities.teachers_roasters_id,
+                                     teachers_availabilities.teachers_roaster_id,
                                      teachers_availabilities.lecturer_work_day_count,
                                      teachers_availabilities.lead_ta_work_day_count,
                                      teachers_availabilities.ta_work_day_count")
@@ -123,7 +123,7 @@ class TeachersController < ApplicationController
                                                 A.course_slug, 
                                                 A.week, 
                                                 A.lecture_day_slug,
-                                                A.teachers_roasters_id,
+                                                A.teachers_roaster_id,
                                                 teachers_roasters.teacher_id,
                                                 teachers_roasters.first_name,
                                                 teachers_roasters.last_name,
@@ -136,7 +136,7 @@ class TeachersController < ApplicationController
                                                 A.ta_work_day_count
                                                 ")
                                               .where(github_nickname: Teacher.to_a, school: @school)
-                                              .joins("INNER JOIN (" + join_table_sql + ") A ON A.teacher_id = teachers_roasters.teacher_id")
+                                              .joins("INNER JOIN (" + join_table_sql + ") A ON A.teachers_roaster_id = teachers_roasters.id")
                                               .order("A.id ASC")
   end
 
@@ -167,8 +167,8 @@ class TeachersController < ApplicationController
   end
 
   def update_teacher_availability(teacher_new_info, day, school)
-    if TeachersAvailability.find_by(bootcamps_week_id: day.id, teachers_roasters_id: TeachersRoaster.find_by(teacher_id: teacher_new_info["id"]).id)
-      TeachersAvailability.find_by(bootcamps_week_id: day.id, teachers_roasters_id: TeachersRoaster.find_by(teacher_id: teacher_new_info["id"]).id).update(
+    if TeachersAvailability.find_by(bootcamps_week_id: day.id, teachers_roaster_id: TeachersRoaster.find_by(teacher_id: teacher_new_info["id"], school: school).id)
+      TeachersAvailability.find_by(bootcamps_week_id: day.id, teachers_roaster_id: TeachersRoaster.find_by(teacher_id: teacher_new_info["id"], school: school).id).update(
         lecturer_work_day_count: teacher_new_info["lecturer_work_day_count"],
         lead_ta_work_day_count: teacher_new_info["lead_ta_work_day_count"],
         ta_work_day_count: teacher_new_info["ta_work_day_count"]
@@ -178,7 +178,7 @@ class TeachersController < ApplicationController
         lecturer_work_day_count: teacher_new_info["lecturer_work_day_count"],
         lead_ta_work_day_count: teacher_new_info["lead_ta_work_day_count"],
         ta_work_day_count: teacher_new_info["ta_work_day_count"],
-        teachers_roasters_id: TeachersRoaster.find_by(teacher_id: teacher_new_info["id"]).id,
+        teachers_roaster_id: TeachersRoaster.find_by(teacher_id: teacher_new_info["id"], school: school).id,
         bootcamps_week_id: day.id
       )
     end

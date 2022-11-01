@@ -1,5 +1,5 @@
 <div class="banner py-5">
-  <h1 class="text-center fw-bold">Le Wagon <%= @school.city.capitalize %></h1>
+  <h1 class="text-center fw-bold">Le Wagon <span style="color: #E60E05; font-weight: bold;"><%= @school.city.capitalize %></span></h1>
   <h4 class="text-center">Teachers Roaster</h4>
   <% if user_signed_in? %>
     <div class="text-center mt-4">
@@ -16,7 +16,7 @@
       <p class="mt-3"><strong>Last update:</strong> <%= (Date.today - @last_update.to_date).to_i %> day<%= "s" if (Date.today - @last_update.to_date).to_i != 1 %> ago (<%= @last_update.strftime("%d of %b %Y, at %H:%M") %>)</p>
     <% end %>
 
-    <%= form_with url: update_roaster_path, method: :post do |f| %>
+    <%= form_with url: update_roaster_path(@school), method: :post do |f| %>
       <%= button_tag class: "btn btn-update" do %>
         <span class="show-when-enabled">Update Roaster</span>
         <span class="show-when-disabled"><i class='fa fa-spinner fa-spin'></i> Updating</span>
@@ -45,7 +45,7 @@
             <td><%= availability.course_slug %></td>
             <td><%= availability.week %></td>
             <td><%= availability.lecture_day_slug %></td>
-            <td><%= availability.teachers_roaster.teacher_id %></td>
+            <td><%= availability.teacher_id %></td>
             <td><%= availability.first_name %> <%= availability.last_name %></td>
             <td><%= availability.github_nickname %></td>
             <td style="<%= "color: rgba(0,0,0,0.1)" if availability.lecturer_work_day_count == 0 %>"><%= availability.lecturer_work_day_count %></td>

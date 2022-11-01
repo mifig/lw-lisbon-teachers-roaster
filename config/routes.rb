@@ -15,5 +15,5 @@ Rails.application.routes.draw do
 
   get "/teachers/:school_id/new", to: "teachers#new", as: :new_teacher
 
-  resources :teachers, only: [:create, :edit, :update]
+  resources :teachers, only: [:create, :edit, :update, :destroy]
 end

@@ -1,3 +1,8 @@
+<div class="banner py-5">
+  <h1 class="text-center fw-bold">Le Wagon</h1>
+  <h4 class="text-center"><span style="color: #E60E05; font-weight: bold;"><%= @school.city %></span> Campus</h4>
+</div>
+
 <div class="d-flex justify-content-between align-items-center mt-5">
   <div class="sign-up-container mt-5">
     <h2 class="text-center mb-3">Teacher Form</h2>
@@ -25,7 +30,7 @@
   <h3 class="text-center my-4" style="color: rgb(103,11,255);"><strong>OR</strong></h3>
 
   <div class="sign-up-container mt-4 mb-4">
-    <h2 class="text-center mb-3">Teachers csv</h2>
+    <h2 class="text-center mb-3">Teachers CSV</h2>
     <div class="text-center">
       <p style="font-size: 14px">csv example:</p>
       <%= image_tag "csv_upload_example.png", height: "150px" %>
@@ -33,6 +38,7 @@
 
     <%= form_with url: teachers_path, model: @teacher, method: :post do |f| %>
       <div class="form-actions mt-3 text-center">
+        <%= f.hidden_field :school_id, value: @school.id %>
         <%= f.file_field :file, required: true, class: "form-control file required" %>
       </div>
 
@@ -43,6 +49,6 @@
         <% end %>
       </div>
     <% end %>
-    <p class="mt-2 mb-0" style="font-size: 12px"><i>*This action will replace previous uploaded teachers.</i></p>
+    <p class="mt-2 mb-0" style="font-size: 12px"><i>*This action will replace previously uploaded teachers.</i></p>
   </div>
 </div>
