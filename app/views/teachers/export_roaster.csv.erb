@@ -1,4 +1,0 @@
-<%= CSV.generate_line(@teachers_availabilities.first.attributes.keys, col_sep: ";").chomp %>
-<% @teachers_availabilities.each do |teacher| %>
-  <%= CSV.generate_line(teacher.to_a, col_sep: ";").chomp %>
-<% end %>

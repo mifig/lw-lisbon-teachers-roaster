@@ -11,9 +11,9 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto align-items-center">
         <% if user_signed_in? %>
-          <li class="nav-item active">
-            <%= link_to "+ Add teachers", "#", class: "nav-link btn btn-export" %>
-          </li>
+          <%# <li class="nav-item active"> %>
+            <%#= link_to "+ Add teachers", "#", class: "nav-link btn btn-export" %>
+          <%# </li> %>
           <li class="nav-item active <%= "fw-bold" if action_name == "home" %>">
             <%= link_to "My Teachers Roasters", root_path, class: "nav-link" %>
           </li>

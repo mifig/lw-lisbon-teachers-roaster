@@ -79,3 +79,4 @@ end
 
 gem "rest-client"
 gem "pundit"
+gem "interactor", "~> 3.0"

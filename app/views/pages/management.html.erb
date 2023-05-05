@@ -3,10 +3,12 @@
   <h4 class="text-center">My Campus</h4>
 </div>
 
-<div class="schools-grid mt-4">
+<div class="mt-4" style="width: 250px;margin: 0 auto;">
   <% @schools.each do |school| %>
     <div class="school-card text-center">
-      <%= link_to school.city, school_mgmt_path(school), class: "btn" %>
+      <%= link_to  school_mgmt_path(school), class: "btn" do %>
+        <i class="fa-solid fa-gear"></i> <%= school.city %>
+      <% end %>
     </div>
   <% end %>
 </div>
